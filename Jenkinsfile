@@ -15,12 +15,6 @@ pipeline {
                 // 生成 Surefire 报告
                 sh 'mvn surefire-report:report'
             }
-            post {
-                // 将 Surefire 报告作为构建产物进行归档
-                always {
-                    archiveArtifacts artifacts: '**/target/surefire-reports/*', fingerprint: true
-                }
-            }
         }
         stage('PMD') {
             steps {
