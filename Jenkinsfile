@@ -36,7 +36,7 @@ pipeline {
             post {
                 // 将 Javadoc 作为构建产物进行归档
                 always {
-                    archiveArtifacts artifacts: '**/target/site/apidocs/*', fingerprint: true
+                    archiveArtifacts artifacts: '**/target/site/*', fingerprint: true
                 }
             }
         }
