@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Build') {
             steps {
-                // 编译代码并跳过测试
+                // 编译代码
                 sh 'mvn -B -DskipTests clean package'
             }
         }
@@ -12,6 +12,8 @@ pipeline {
             steps {
                 // 运行测试并生成 Surefire 报告
                 sh 'mvn test'
+                // 生成 Surefire 报告
+                sh 'mvn surefire-report:report'
             }
             post {
                 // 将 Surefire 报告作为构建产物进行归档
@@ -20,10 +22,22 @@ pipeline {
                 }
             }
         }
-        stage('pmd') {
+        stage('PMD') {
             steps {
                 // 运行 PMD 静态代码分析
                 sh 'mvn pmd:pmd'
+            }
+        }
+        stage('Generate Javadoc') {
+            steps {
+                // 生成 Javadoc
+                sh 'mvn javadoc:jar'
+            }
+            post {
+                // 将 Javadoc 作为构建产物进行归档
+                always {
+                    archiveArtifacts artifacts: '**/target/site/apidocs/*', fingerprint: true
+                }
             }
         }
     }
