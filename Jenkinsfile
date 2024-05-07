@@ -8,14 +8,30 @@ pipeline {
                 sh 'mvn -B -DskipTests clean package'
             }
         }
+//         stage('Test') {
+//             steps {
+//                 // 运行测试并生成 Surefire 报告
+//                 sh 'mvn test'
+//                 // 生成 Surefire 报告
+//                 sh 'mvn surefire-report:report'
+//             }
+//         }
         stage('Test') {
             steps {
-                // 运行测试并生成 Surefire 报告
-                sh 'mvn test'
-                // 生成 Surefire 报告
-                sh 'mvn surefire-report:report'
+                script {
+                    try {
+                        // 运行测试并生成 Surefire 报告
+                        sh 'mvn test'
+                        // 生成 Surefire 报告
+                        sh 'mvn surefire-report:report'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE' // 将构建结果设置为失败
+                        echo "Tests failed: ${e.message}" // 输出错误信息
+                    }
+                }
             }
         }
+
         stage('PMD') {
             steps {
                 // 运行 PMD 静态代码分析
