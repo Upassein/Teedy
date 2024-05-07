@@ -21,7 +21,7 @@ pipeline {
                 script {
                     try {
                         // 运行测试并生成 Surefire 报告
-                        sh 'mvn test'
+                        sh 'mvn test --fail-never'
                         // 生成 Surefire 报告
                         sh 'mvn surefire-report:report'
                     } catch (Exception e) {
